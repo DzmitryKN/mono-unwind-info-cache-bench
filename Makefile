@@ -20,7 +20,7 @@ endurance_original:
 
 endurance_optimized:
 	@echo " *** ENDURANCE TESTING OPTIMIZED CODE UNTIL Ctrl+C ***"
-	$(ORIGINAL)
+	$(OPTIMIZED)
 
 build: $(ORIGINAL) $(OPTIMIZED)
 
