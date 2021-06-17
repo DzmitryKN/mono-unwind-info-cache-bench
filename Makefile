@@ -14,27 +14,27 @@ bench: build
 	@echo " *** BENCHMARKING OPTIMIZED CODE ***"
 	$(OPTIMIZED) $(BENCHLOOPS)
 
-endurance_original:
+endurance_original: $(ORIGINAL)
 	@echo " *** ENDURANCE TESTING ORIGINAL CODE UNTIL Ctrl+C ***"
 	$(ORIGINAL)
 
-endurance_optimized:
+endurance_optimized: $(OPTIMIZED)
 	@echo " *** ENDURANCE TESTING OPTIMIZED CODE UNTIL Ctrl+C ***"
 	$(OPTIMIZED)
 
 build: $(ORIGINAL) $(OPTIMIZED)
 
 $(ORIGINAL): cachebench.cpp _build
-	g++ -std=c++11 -O2 cachebench.cpp -o $(ORIGINAL)
+	g++ -std=c++11 -O2 -I. cachebench.cpp -o $(ORIGINAL)
 
 $(OPTIMIZED): cachebench.cpp _build
-	g++ -std=c++11 -O2 -DOPTIMIZED cachebench.cpp -o $(OPTIMIZED)
+	g++ -std=c++11 -O2 -DOPTIMIZED -I. cachebench.cpp -o $(OPTIMIZED)
 
 _build:
 	mkdir _build
 
 clean:
 	rm -f $(ORIGINAL) $(OPTIMIZED)
-	rm -d _build
+	rm -fd _build
 
 .PHONY: clean
