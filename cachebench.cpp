@@ -92,6 +92,8 @@ mono_unwind_cleanup (void)
 
 	/* make sure debit matches credit */
 	g_assert (cached_count == 0);
+
+	unwind_info_size = 0;
 }
 
 static guint16
@@ -367,6 +369,8 @@ mono_unwind_cleanup (void)
 	cached_info = NULL;
 	cached_info_next = cached_info_size = 0;
 	cached_info_list = NULL;
+
+	unwind_info_size = 0;
 }
 
 /*
@@ -416,6 +420,7 @@ mono_cache_unwind_info (guint8 *unwind_info, guint32 unwind_info_len)
 		 */
 
 		new_table = g_new0 (MonoUnwindInfo*, cached_info_size * 2);
+		unwind_info_size += sizeof (MonoUnwindInfo*) * cached_info_size * 2;
 
 		memcpy (new_table, cached_info, cached_info_size * sizeof (MonoUnwindInfo*));
 
@@ -495,7 +500,7 @@ int main(int argc, char **argv)
 		if ((rand() & 0xffff) == 123) {
 			clock_t cl_end = clock();
 			unsigned long msec = (cl_end - cl_start) / 1000;
-			printf("{%ld@%ld}", known.size(), (msec ? (1000 * known.size()) / msec : -1));
+			printf("{cnt=%ld mem=%d lps=%ld}", known.size(), unwind_info_size, (msec ? (1000 * known.size()) / msec : -1));
 			fflush(stdout);
 			for (const auto &k : known) {
 				index = mono_cache_unwind_info ((guint8 *)&k.first[0], k.first.size());
